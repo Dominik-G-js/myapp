@@ -1,4 +1,4 @@
-# MyApp — Nette demo
+Nette demo
 
 Krátká ukázková Nette aplikace (demo e-shop) připravená pro lokální vývoj.
 
