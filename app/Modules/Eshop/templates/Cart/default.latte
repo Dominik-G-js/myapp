@@ -1,0 +1,19 @@
+{block content}
+<h1>Košík</h1>
+
+{if $items|count === 0}
+    <p>Košík je prázdný.</p>
+{else}
+    <ul>
+    {foreach $items as $item}
+        <li>
+            {$item[product][name]|escape} — {$item[product][price]} Kč × {$item[qty]}
+            <a href="/eshop/cart/remove?id={$item[product][id]}">[odstranit]</a>
+        </li>
+    {/foreach}
+    </ul>
+{/if}
+
+{/block}
+
+

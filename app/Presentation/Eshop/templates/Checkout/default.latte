@@ -1,0 +1,189 @@
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Objednávka</title>
+  <!-- TADY JE PEVNÝ LINK NA CSS -->
+  <link rel="stylesheet" href="{$basePath}/assets/main.css?v={=time()}">
+</head>
+{var $pageTitle = 'Objednávka'}
+
+{block content}
+<div class="checkout-page">
+  <div class="checkout-header">
+    <h1>🛒 Objednávka</h1>
+    <div class="checkout-steps">
+      <div class="step completed">
+        <div class="step-icon">✓</div>
+        <div class="step-text">Košík</div>
+      </div>
+      <div class="step active">
+        <div class="step-icon">2</div>
+        <div class="step-text">Doprava a platba</div>
+      </div>
+      <div class="step">
+        <div class="step-icon">3</div>
+        <div class="step-text">Dodací údaje</div>
+      </div>
+      <div class="step">
+        <div class="step-icon">4</div>
+        <div class="step-text">Potvrzení</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="checkout-content">
+    {if count($items) === 0}
+      <div class="empty-cart">
+        <div class="empty-icon">🛒</div>
+        <h3>Váš košík je prázdný</h3>
+        <p>Přidejte nějaké produkty do košíku, abyste mohli pokračovat v objednávce.</p>
+        <a href="/eshop/product/list" class="btn btn-primary">Zpět do obchodu</a>
+      </div>
+    {else}
+      <div class="checkout-grid">
+        <div class="checkout-main">
+          <div class="order-summary">
+            <h2>📋 Souhrn objednávky</h2>
+            <div class="order-items">
+              {foreach $items as $item}
+                <div class="order-item">
+                  <div class="item-image">
+                    <img src="{$item[product]['image'] ?? '/assets/placeholder.svg'}" alt="{$item[product][name]|escape}" loading="lazy">
+                  </div>
+                  <div class="item-details">
+                    <h4>{$item[product][name]|escape}</h4>
+                    <p class="item-price">{$item[product][price]} Kč</p>
+                  </div>
+                  <div class="item-quantity">
+                    <span class="qty-badge">{$item[qty]}x</span>
+                  </div>
+                  <div class="item-total">
+                    <strong>{$item[product][price] * $item[qty]} Kč</strong>
+                  </div>
+                </div>
+              {/foreach}
+            </div>
+          </div>
+
+          <div class="shipping-payment">
+            <h2>🚚 Doprava a platba</h2>
+            <form method="post" action="{link Checkout:default}" class="checkout-form" novalidate>
+              <div class="form-section">
+                <h3>Doprava</h3>
+                <div class="radio-group">
+                  <label class="radio-option">
+                    <input type="radio" name="shipping" value="post" checked>
+                    <div class="radio-content">
+                      <div class="radio-icon">📮</div>
+                      <div class="radio-text">
+                        <strong>Česká pošta</strong>
+                        <span>Doručení do 3-5 pracovních dnů</span>
+                      </div>
+                      <div class="radio-price">99 Kč</div>
+                    </div>
+                  </label>
+                  <label class="radio-option">
+                    <input type="radio" name="shipping" value="express">
+                    <div class="radio-content">
+                      <div class="radio-icon">🚀</div>
+                      <div class="radio-text">
+                        <strong>Expresní doručení</strong>
+                        <span>Doručení do 24 hodin</span>
+                      </div>
+                      <div class="radio-price">199 Kč</div>
+                    </div>
+                  </label>
+                </div>
+              </div>
+
+              <div class="form-section">
+                <h3>Platba</h3>
+                <div class="radio-group">
+                  <label class="radio-option">
+                    <input type="radio" name="payment" value="cash" checked>
+                    <div class="radio-content">
+                      <div class="radio-icon">💵</div>
+                      <div class="radio-text">
+                        <strong>Dobírka</strong>
+                        <span>Platba při převzetí</span>
+                      </div>
+                    </div>
+                  </label>
+                  <label class="radio-option">
+                    <input type="radio" name="payment" value="card">
+                    <div class="radio-content">
+                      <div class="radio-icon">💳</div>
+                      <div class="radio-text">
+                        <strong>Platební karta</strong>
+                        <span>Bezpečná online platba</span>
+                      </div>
+                    </div>
+                  </label>
+                </div>
+              </div>
+
+              <div class="form-section">
+                <h3>📝 Dodací údaje</h3>
+                <div class="form-row">
+                  <div class="form-group">
+                    <label>Jméno a příjmení</label>
+                    <input type="text" name="name" placeholder="Zadejte své jméno">
+                  </div>
+                  <div class="form-group">
+                    <label>Email</label>
+                    <input type="email" name="email" placeholder="vas@email.cz">
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label>Telefon</label>
+                  <input type="tel" name="phone" placeholder="+420 123 456 789">
+                </div>
+                <div class="form-group">
+                  <label>Adresa</label>
+                  <textarea name="address" placeholder="Ulice, číslo popisné, PSČ, město"></textarea>
+                </div>
+              </div>
+
+              <div class="form-actions">
+                <a href="/eshop/cart/" class="btn btn-secondary">
+                  <span class="btn-icon">←</span>
+                  <span class="btn-text">Zpět do košíku</span>
+                </a>
+                <button type="submit" class="btn btn-primary btn-large checkout-btn">
+                  <span class="btn-icon">💳</span>
+                  <span class="btn-text">Pokračovat k platbě</span>
+                  <span class="btn-arrow">→</span>
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+
+        <div class="checkout-sidebar">
+          <div class="order-total">
+            <h3>💰 Celková částka</h3>
+            <div class="total-breakdown">
+              <div class="total-row">
+                <span>Produkty:</span>
+                <span>{var $subtotal = 0}{foreach $items as $item}{var $subtotal = $subtotal + $item[product][price] * $item[qty]}{/foreach}{$subtotal} Kč</span>
+              </div>
+              <div class="total-row">
+                <span>Doprava:</span>
+                <span>99 Kč</span>
+              </div>
+              <div class="total-row total-final">
+                <span>Celkem:</span>
+                <span><strong>{$subtotal + 99} Kč</strong></span>
+              </div>
+            </div>
+            <div class="secure-badge">
+              🔒 Bezpečná platba
+            </div>
+          </div>
+        </div>
+      </div>
+    {/if}
+  </div>
+</div>
+{/block}

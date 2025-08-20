@@ -1,0 +1,14 @@
+{block content}
+<h1>Seznam produktů</h1>
+<ul>
+{foreach $products as $product}
+    <li>
+        <a href="/eshop/product/detail?id={$product[id]}">{$product[name]|escape}</a>
+        — {$product[price]} Kč
+        <a href="/eshop/product/add?id={$product[id]}" class="add-to-cart">[Přidat do košíku]</a>
+    </li>
+{/foreach}
+</ul>
+{/block}
+
+

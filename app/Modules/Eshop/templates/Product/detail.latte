@@ -1,0 +1,9 @@
+{block content}
+<h1>{$product[name]|escape}</h1>
+<p><strong>Cena:</strong> {$product[price]} Kč</p>
+<p>{$product[description]|escape}</p>
+<p><a href="/eshop/product/list">Zpět na seznam</a></p>
+<p><a href="/eshop/product/add?id={$product[id]}">Přidat do košíku</a></p>
+{/block}
+
+

@@ -1,0 +1,102 @@
+{block content}
+
+<div class="cart-page">
+  <div class="cart-header">
+    <h1>🛒 Váš košík</h1>
+    <p>Zkontrolujte si své položky před dokončením objednávky</p>
+  </div>
+
+  {if count($items) === 0}
+    <div class="empty-cart">
+      <div class="empty-icon">🛒</div>
+      <h3>Váš košík je prázdný</h3>
+      <p>Přidejte nějaké produkty do košíku, abyste mohli pokračovat v nákupu.</p>
+      <a href="/eshop/product/list" class="btn btn-primary">Pokračovat v nákupu</a>
+    </div>
+  {else}
+    <div class="cart-layout">
+      <div class="cart-main">
+        <div class="cart-items">
+          {foreach $items as $item}
+            <div class="cart-item">
+              <div class="item-image">
+                <img src="{$item[product]['image'] ?? '/assets/placeholder.svg'}" alt="{$item[product][name]|escape}" loading="lazy">
+              </div>
+              <div class="item-details">
+                <h4>{$item[product][name]|escape}</h4>
+                <p class="item-description">{$item[product]['description'] ?? 'Kvalitní produkt'}</p>
+                <div class="item-meta">
+                  <span class="item-price">{$item[product][price]} Kč</span>
+                  <span class="item-qty">Množství: {$item[qty]}</span>
+                </div>
+              </div>
+              <div class="item-total">
+                <strong>{$item[product][price] * $item[qty]} Kč</strong>
+              </div>
+              <div class="item-actions">
+                <a href="/eshop/cart/remove?id={$item[product][id]}" class="btn-remove" onclick="return confirm('Opravdu chcete odstranit tento produkt?')">
+                  🗑️ Odstranit
+                </a>
+              </div>
+            </div>
+          {/foreach}
+        </div>
+      </div>
+
+      <div class="cart-sidebar">
+        <div class="cart-summary">
+          <h3>💰 Souhrn objednávky</h3>
+          <div class="summary-items">
+            {var $subtotal = 0}
+            {foreach $items as $item}
+              {var $subtotal = $subtotal + $item[product][price] * $item[qty]}
+              <div class="summary-item">
+                <span>{$item[product][name]|escape}</span>
+                <span>{$item[product][price] * $item[qty]} Kč</span>
+              </div>
+            {/foreach}
+          </div>
+          
+          <div class="summary-total">
+            <div class="total-row">
+              <span>Mezisoučet:</span>
+              <span>{$subtotal} Kč</span>
+            </div>
+            <div class="total-row">
+              <span>Doprava:</span>
+              <span>99 Kč</span>
+            </div>
+            <div class="total-row total-final">
+              <span>Celkem:</span>
+              <span><strong>{$subtotal + 99} Kč</strong></span>
+            </div>
+          </div>
+
+          <div class="cart-actions">
+            <a href="/eshop/product/list" class="btn btn-secondary">← Pokračovat v nákupu</a>
+            <a href="/eshop/checkout/" class="btn btn-primary">Pokračovat k platbě →</a>
+          </div>
+
+          <div class="cart-benefits">
+            <div class="benefit">
+              <span class="benefit-icon">🚚</span>
+              <span>Doručení do 24 hodin</span>
+            </div>
+            <div class="benefit">
+              <span class="benefit-icon">🛡️</span>
+              <span>Bezpečná platba</span>
+            </div>
+            <div class="benefit">
+              <span class="benefit-icon">↩️</span>
+              <span>30 dní na vrácení</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  {/if}
+</div>
+
+{/block}
+
+

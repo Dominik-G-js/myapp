@@ -1,0 +1,174 @@
+
+{block content}
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Objednávka</title>
+  <link rel="stylesheet" href="{$basePath}/assets/main.css?v={=time()}">
+</head>
+
+<div class="checkout-page">
+  <div class="checkout-header">
+    <h1>✅ Děkujeme za objednávku!</h1>
+    <div class="checkout-steps">
+      <div class="step completed">
+        <div class="step-icon">✓</div>
+        <div class="step-text">Košík</div>
+      </div>
+      <div class="step completed">
+        <div class="step-icon">✓</div>
+        <div class="step-text">Doprava a platba</div>
+      </div>
+      <div class="step completed">
+        <div class="step-icon">✓</div>
+        <div class="step-text">Dodací údaje</div>
+      </div>
+      <div class="step completed active">
+        <div class="step-icon">✓</div>
+        <div class="step-text">Potvrzení</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="checkout-content">
+    {if !$order}
+      <div class="empty-cart">
+        <div class="empty-icon">⚠️</div>
+        <h3>Objednávka nenalezena</h3>
+        <p>Požadovaná objednávka nebyla nalezena nebo neexistuje.</p>
+        <a href="/eshop/product/list" class="btn btn-primary">Zpět do obchodu</a>
+      </div>
+    {else}
+      <div class="checkout-grid">
+        <div class="checkout-main">
+          <div class="order-summary success-animation">
+            <h2>🎉 Objednávka byla přijata</h2>
+            <div class="order-confirmation">
+              <div class="confirmation-item">
+                <span class="confirmation-label">Číslo objednávky:</span>
+                <span class="confirmation-value"><strong>#{$order[id]}</strong></span>
+              </div>
+              <div class="confirmation-item">
+                <span class="confirmation-label">Stav:</span>
+                <span class="confirmation-value success-badge">✓ Přijato</span>
+              </div>
+              <div class="confirmation-item">
+                <span class="confirmation-label">Datum:</span>
+                <span class="confirmation-value">{$order['created'] ?? date('d.m.Y H:i')}</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="shipping-payment">
+            <h2>📦 Dodací údaje</h2>
+            <div class="delivery-info">
+              <div class="info-section">
+                <h4>👤 Příjemce</h4>
+                <p><strong>{$order[name]|escape}</strong></p>
+                {ifset $order[email]}<p>📧 {$order[email]|escape}</p>{/ifset}
+                {ifset $order[phone]}<p>📞 {$order[phone]|escape}</p>{/ifset}
+              </div>
+              <div class="info-section">
+                <h4>📍 Dodací adresa</h4>
+                <p>{$order[address]|escape}</p>
+              </div>
+            </div>
+          </div>
+
+          {ifset $order[items]}
+          <div class="order-summary">
+            <h2>📋 Objednané položky</h2>
+            <div class="order-items">
+              {foreach $order[items] as $item}
+                <div class="order-item">
+                  <div class="item-image">
+                    <img src="{$item[product]['image'] ?? '/assets/placeholder.svg'}" alt="{$item[product][name]|escape}" loading="lazy">
+                  </div>
+                  <div class="item-details">
+                    <h4>{$item[product][name]|escape}</h4>
+                    <p class="item-price">{$item[product][price]} Kč</p>
+                  </div>
+                  <div class="item-quantity">
+                    <span class="qty-badge">{$item[qty]}×</span>
+                  </div>
+                  <div class="item-total">
+                    <strong>{$item[product][price] * $item[qty]} Kč</strong>
+                  </div>
+                </div>
+              {/foreach}
+            </div>
+          </div>
+          {/ifset}
+        </div>
+
+        <div class="checkout-sidebar">
+          <div class="order-total">
+            <h3>💰 Celková částka</h3>
+            <div class="total-breakdown">
+              {ifset $order[items]}
+                <div class="total-row">
+                  <span>Produkty:</span>
+                  <span>{var $subtotal = 0}{foreach $order[items] as $item}{var $subtotal = $subtotal + $item[product][price] * $item[qty]}{/foreach}{$subtotal} Kč</span>
+                </div>
+              {/ifset}
+              <div class="total-row">
+                <span>Doprava:</span>
+                <span>99 Kč</span>
+              </div>
+              <div class="total-row total-final">
+                <span>Celkem:</span>
+                <span><strong>{ifset $order[total]}{$order[total]}{else}{$subtotal + 99}{/ifset} Kč</strong></span>
+              </div>
+            </div>
+            <div class="secure-badge">
+              ✅ Objednávka potvrzena
+            </div>
+          </div>
+
+          <div class="next-steps">
+            <h3>📬 Co bude následovat?</h3>
+            <div class="step-list">
+              <div class="next-step">
+                <span class="step-number">1</span>
+                <div class="step-content">
+                  <h4>Potvrzení emailem</h4>
+                  <p>Na váš email pošleme potvrzení objednávky</p>
+                </div>
+              </div>
+              <div class="next-step">
+                <span class="step-number">2</span>
+                <div class="step-content">
+                  <h4>Příprava zásilky</h4>
+                  <p>Vaši objednávku připravíme k odeslání</p>
+                </div>
+              </div>
+              <div class="next-step">
+                <span class="step-number">3</span>
+                <div class="step-content">
+                  <h4>Doručení</h4>
+                  <p>Zásilku doručíme na uvedenou adresu</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="action-buttons">
+            <a href="/eshop/product/list" class="btn btn-primary btn-large">
+              <span class="btn-icon">🛍️</span>
+              <span class="btn-text">Pokračovat v nákupu</span>
+            </a>
+            <a href="/" class="btn btn-secondary">
+              <span class="btn-icon">🏠</span>
+              <span class="btn-text">Zpět na hlavní stránku</span>
+            </a>
+          </div>
+        </div>
+      </div>
+    {/if}
+  </div>
+</div>
+
+{/block}
+
+

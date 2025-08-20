@@ -1,0 +1,121 @@
+{block content}
+
+<div class="product-detail-page">
+  <div class="product-detail-container">
+    <!-- Breadcrumb -->
+    <nav class="breadcrumb">
+      <a href="{link Product:list}">← Zpět na produkty</a>
+    </nav>
+
+    <div class="product-detail-grid">
+      <!-- Product Image -->
+      <div class="product-image-section">
+        <div class="product-image-container">
+          <img src="{$product['image'] ?? 'https://via.placeholder.com/600x400?text=Produkt+' . $product[id]}" 
+               alt="{$product[name]|escape}" 
+               class="product-main-image"
+               loading="lazy">
+          {ifset $product['badge']}
+            {var $variant = 'default'}
+            {var $badgeLower = mb_strtolower($product['badge'])}
+            {if strpos($badgeLower, 'sleva') !== false || strpos($badgeLower, 'akce') !== false}{var $variant = 'sale'}{/if}
+            {if strpos($badgeLower, 'novinka') !== false || strpos($badgeLower, 'new') !== false}{var $variant = 'new'}{/if}
+            {if strpos($badgeLower, 'hit') !== false || strpos($badgeLower, 'top') !== false}{var $variant = 'top'}{/if}
+            <div class="product-badge" data-variant="{$variant}">{$product['badge']}</div>
+          {/ifset}
+        </div>
+      </div>
+
+      <!-- Product Info -->
+      <div class="product-info-section">
+        <div class="product-header">
+          <h1 class="product-title">{$product[name]|escape}</h1>
+          <div class="product-category">
+            <span class="category-tag">{$product['category'] ?? 'Obecné'}</span>
+          </div>
+        </div>
+
+        <div class="product-price-section">
+          <div class="price-display">
+            <span class="price-amount">{$product[price]}</span>
+            <span class="price-currency">Kč</span>
+          </div>
+          {if $product['price'] > 1000}
+            <div class="price-benefits">
+              <div class="benefit-item">
+                <span class="benefit-icon">🚚</span>
+                <span>Doprava zdarma</span>
+              </div>
+              <div class="benefit-item">
+                <span class="benefit-icon">🔄</span>
+                <span>30 dní na vrácení</span>
+              </div>
+            </div>
+          {/if}
+        </div>
+
+        <div class="product-description">
+          <h3>Popis produktu</h3>
+          <p>{$product[description]|escape}</p>
+        </div>
+
+        <!-- Add to Cart Form -->
+        <div class="product-actions">
+          <form method="post" action="/eshop/product/add?id={$product['id']}" class="add-to-cart-form">
+            <input type="hidden" name="id" value="{$product[id]}">
+            
+            <div class="quantity-section">
+              <label for="qty">Množství:</label>
+              <div class="quantity-controls">
+                <button type="button" class="qty-btn" data-action="decrease">−</button>
+                <input type="number" name="qty" id="qty" value="1" min="1" max="99" class="qty-input">
+                <button type="button" class="qty-btn" data-action="increase">+</button>
+              </div>
+            </div>
+
+            <div class="action-buttons">
+              <button type="submit" class="btn btn-primary btn-large add-to-cart-btn">
+                <span class="btn-icon">🛒</span>
+                <span class="btn-text">Přidat do košíku</span>
+              </button>
+              
+              <button type="button" class="btn btn-secondary btn-large wishlist-btn">
+                <span class="btn-icon">❤️</span>
+                <span class="btn-text">Přidat k oblíbeným</span>
+              </button>
+            </div>
+          </form>
+        </div>
+
+        <!-- Product Features -->
+        <div class="product-features">
+          <div class="feature-item">
+            <span class="feature-icon">⚡</span>
+            <div class="feature-content">
+              <h4>Rychlé dodání</h4>
+              <p>Doručení do 24 hodin</p>
+            </div>
+          </div>
+          <div class="feature-item">
+            <span class="feature-icon">🛡️</span>
+            <div class="feature-content">
+              <h4>Bezpečná platba</h4>
+              <p>SSL šifrování</p>
+            </div>
+          </div>
+          <div class="feature-item">
+            <span class="feature-icon">📞</span>
+            <div class="feature-content">
+              <h4>Podpora 24/7</h4>
+              <p>Vždy vám pomůžeme</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+{/block}
+
+

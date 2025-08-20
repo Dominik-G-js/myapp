@@ -1,0 +1,210 @@
+{block content}
+
+<div class="product-listing">
+  {if !isset($productGridOnly) || !$productGridOnly}
+  <!-- Enhanced Header -->
+  <div class="listing-header">
+    <div class="header-content">
+      <h1 class="page-title">
+        <span class="title-icon">🛍️</span>
+        <span class="title-text">Produkty</span>
+        {if isset($q) && $q}
+          <span class="search-results">pro "{$q}"</span>
+        {/if}
+      </h1>
+      
+      <div class="header-actions">
+        <div class="search-section">
+          <form class="search-form" method="get" role="search" aria-label="Vyhledávání produktů">
+            <div class="search-input-wrapper">
+              <span class="search-icon">🔍</span>
+              <input type="text" 
+                     name="q" 
+                     placeholder="Hledat produkty..." 
+                     value="{$q ?? ''}" 
+                     class="search-input"
+                     autocomplete="off"
+                     aria-label="Hledat produkty">
+              <button type="submit" class="search-btn">
+                <span class="btn-text">Hledat</span>
+              </button>
+            </div>
+          </form>
+        </div>
+        
+        <div class="view-controls" role="tablist" aria-label="Zobrazení produktů">
+          <button class="view-btn active" data-view="grid" role="tab" aria-selected="true">
+            <span class="view-icon">⊞</span>
+          </button>
+          <button class="view-btn" data-view="list" role="tab" aria-selected="false">
+            <span class="view-icon">☰</span>
+          </button>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Filters -->
+    <div class="filters-section" aria-label="Filtry produktů">
+      <div class="filter-group">
+        <label class="filter-label">Kategorie:</label>
+        <select class="filter-select">
+          <option value="">Všechny kategorie</option>
+          <option value="electronics">Elektronika</option>
+          <option value="clothing">Oblečení</option>
+          <option value="home">Domácnost</option>
+        </select>
+      </div>
+      
+      <div class="filter-group">
+        <label class="filter-label">Cena:</label>
+        <select class="filter-select">
+          <option value="">Všechny ceny</option>
+          <option value="0-500">Do 500 Kč</option>
+          <option value="500-1000">500 - 1000 Kč</option>
+          <option value="1000+">Nad 1000 Kč</option>
+        </select>
+      </div>
+      
+      <div class="filter-group">
+        <label class="filter-label">Řadit podle:</label>
+        <select class="filter-select">
+          <option value="name">Názvu</option>
+          <option value="price-low">Ceny (nejnižší)</option>
+          <option value="price-high">Ceny (nejvyšší)</option>
+          <option value="newest">Nejnovější</option>
+        </select>
+      </div>
+    </div>
+  </div>
+  {/if}
+
+  <!-- Product Grid -->
+  <div class="product-grid" data-view="grid">
+    {if isset($products) && $products}
+    {foreach $products as $product}
+      <div class="product-card" 
+           data-title="{$product['name']|escape}"
+           data-price="{$product['price']} Kč"
+           data-desc="{$product['description'] ?? 'Kvalitní produkt pro vaše potřeby'}"
+           data-img="{$product['image'] ?? '/assets/placeholder.svg'}"
+           data-id="{$product['id']}"
+           data-add-url="{link Product:add, $product['id']}"
+           itemscope itemtype="https://schema.org/Product">
+        
+        <div class="card-media">
+          <a class="product-link" href="{link Product:detail, $product['id']}" itemprop="url">
+            <img src="{$product['image'] ?? '/assets/placeholder.svg'}" 
+                 alt="{$product['name']|escape}" 
+                 loading="lazy"
+                 class="product-image"
+                 itemprop="image">
+            <div class="image-overlay" aria-hidden="true">
+              <span class="view-detail">Zobrazit detail</span>
+            </div>
+          </a>
+          
+          {ifset $product['badge']}
+            {var $bv = strtolower($product['badge'])}
+            {var $variant = (strpos($bv, 'sleva') !== false || strpos($bv, 'akce') !== false) ? 'sale' : (strpos($bv, 'novinka') !== false ? 'new' : (strpos($bv, 'hit') !== false ? 'top' : null))}
+            <div class="product-badge" {if $variant}data-variant="{$variant}"{/if} aria-label="Štítek produktu">{$product['badge']}</div>
+          {/ifset}
+          
+          <button class="quickview-btn" data-quickview="{$product['id']}" aria-label="Rychlý náhled {$product['name']|escape}">
+            <span class="quickview-icon" aria-hidden="true">👁️</span>
+          </button>
+          
+          <button class="wishlist-btn" aria-label="Přidat do oblíbených">
+            <span class="wishlist-icon" aria-hidden="true">❤️</span>
+          </button>
+        </div>
+        
+        <div class="product-info">
+          <div class="product-category">
+            <span class="category-tag" itemprop="category">{$product['category'] ?? 'Obecné'}</span>
+          </div>
+          
+          <h3 class="product-title" itemprop="name">
+            <a href="{link Product:detail, $product['id']}" itemprop="url">{$product['name']|escape}</a>
+          </h3>
+          
+          <div class="product-description" itemprop="description">
+            {$product['description'] ?? 'Kvalitní produkt pro vaše potřeby'}
+          </div>
+          
+          <div class="product-price price" itemprop="offers" itemscope itemtype="https://schema.org/Offer">
+            <meta itemprop="priceCurrency" content="CZK">
+            <span class="price-amount" itemprop="price">{$product['price']}</span>
+            <span class="price-currency">Kč</span>
+          </div>
+          
+          <div class="product-actions">
+            <button class="btn btn-primary add-to-cart-btn ajax-add" 
+                    data-add-url="{link Product:add, $product['id']}"
+                    aria-label="Přidat {$product['name']|escape} do košíku">
+              <span class="btn-icon" aria-hidden="true">🛒</span>
+              <span class="btn-text">Přidat do košíku</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    {/foreach}
+    {/if}
+  </div>
+
+  {if !isset($productGridOnly) || !$productGridOnly}
+  <!-- Empty State -->
+  {if isset($products) && count($products) === 0}
+    <div class="empty-state" role="status">
+      <div class="empty-icon" aria-hidden="true">🛍️</div>
+      <h3>Žádné produkty nenalezeny</h3>
+      <p>Zkuste změnit vyhledávací kritéria nebo se vraťte později.</p>
+      <a href="{link Product:list}" class="btn btn-primary">Zobrazit všechny produkty</a>
+    </div>
+  {/if}
+
+  <!-- Enhanced Pagination -->
+  {if isset($products) && (isset($page) && $page > 1 || count($products) >= 8)}
+    <div class="pagination-section" role="navigation" aria-label="Stránkování">
+      <div class="pagination-info">
+        <span class="results-count">Zobrazeno {count($products)} z celkových produktů</span>
+      </div>
+      
+      <div class="pagination-controls">
+        {if isset($page) && $page > 1}
+          <a href="?page={$page-1}{if isset($q)}&q={$q}{/if}" class="pagination-btn prev">
+            <span class="pagination-icon" aria-hidden="true">←</span>
+            <span class="pagination-text">Předchozí</span>
+          </a>
+        {/if}
+        
+        <div class="pagination-numbers">
+          {if isset($page) && $page > 2}
+            <a href="?page=1{if isset($q)}&q={$q}{/if}" class="pagination-number">1</a>
+            <span class="pagination-dots">...</span>
+          {/if}
+          
+          {if isset($page) && $page > 1}
+            <a href="?page={$page-1}{if isset($q)}&q={$q}{/if}" class="pagination-number">{$page-1}</a>
+          {/if}
+          
+          <span class="pagination-number active">{$page ?? 1}</span>
+          
+          <a href="?page={($page ?? 1)+1}{if isset($q)}&q={$q}{/if}" class="pagination-number">{$page ?? 1}+1</a>
+          
+          <span class="pagination-dots">...</span>
+          <a href="?page=10{if isset($q)}&q={$q}{/if}" class="pagination-number">10</a>
+        </div>
+        
+        <a href="?page={($page ?? 1)+1}{if isset($q)}&q={$q}{/if}" class="pagination-btn next">
+          <span class="pagination-text">Další</span>
+          <span class="pagination-icon" aria-hidden="true">→</span>
+        </a>
+      </div>
+    </div>
+  {/if}
+  {/if}
+</div>
+
+{/block}
+
+

@@ -1,0 +1,110 @@
+{block content}
+
+<!-- LUXE VERSE Hero Section -->
+<section class="hero">
+  <div class="hero-content">
+    <div class="hero-badge">✨ Futuristická kolekce 2025</div>
+    <h1 class="hero-title">PŘEDEFINUJ SVŮJ STYL</h1>
+    <p class="hero-subtitle">Kde se špičková móda setkává s revoluční technologií</p>
+    <div class="hero-cta">
+      <a class="cta-primary" href="/eshop/product/list">Prozkoumat vesmír</a>
+      <a class="cta-secondary" href="/eshop/product/list">Sledovat příběh</a>
+    </div>
+  </div>
+  
+  <div class="floating-sale">
+    <div class="sale-text">AŽ<br><strong>70% SLEVA</strong><br>⚡ BLESKOVÝ VÝPRODEJ</div>
+  </div>
+</section>
+
+<!-- Newsletter -->
+<section class="newsletter">
+  <h2 class="newsletter-title">PŘIPOJ SE K VESMÍRU</h2>
+  <p>Získej exkluzivní přístup k novým dimenzím a limitovaným vydáním</p>
+  <div class="newsletter-form">
+    <input type="email" class="newsletter-input" placeholder="Zadej svůj kosmický email">
+    <button class="newsletter-btn">Vzestup</button>
+  </div>
+</section>
+
+<!-- New Arrivals Section -->
+<section class="home-section new-arrivals">
+  <div class="container">
+    <div class="section-head">
+      <h2 class="section-title">Novinky</h2>
+      <div class="section-actions">
+        <a href="/eshop/product/list" class="btn btn-ghost">Zobrazit vše</a>
+      </div>
+    </div>
+
+    <div class="product-grid">
+      {include '../Eshop/templates/Product/list.latte' productGridOnly => true}
+    </div>
+  </div>
+</section>
+
+<!-- Flash Sales Section with Countdown -->
+<section class="home-section">
+  <div class="container">
+    <div class="flash-sales" data-countdown-target="{= strtotime('+2 days') }">
+      <div class="section-head">
+        <h2 class="section-title">Bleskové slevy</h2>
+        <a href="/eshop/product/list" class="btn btn-gold">Nakoupit výhodně</a>
+      </div>
+      <div class="countdown" id="flash-countdown">
+        <div class="time-unit"><span class="number" data-dd>00</span><span class="label">Dny</span></div>
+        <div class="time-unit"><span class="number" data-hh>00</span><span class="label">Hodiny</span></div>
+        <div class="time-unit"><span class="number" data-mm>00</span><span class="label">Minuty</span></div>
+        <div class="time-unit"><span class="number" data-ss>00</span><span class="label">Sekundy</span></div>
+      </div>
+      <div class="flash-grid">
+        {block flashProducts}
+          <!-- TODO: dynamic discounted items; as placeholder reuse category cards -->
+          <a class="category-card category-card-lux" href="/eshop/product/list"><div class="category-icon">🔥</div><h3>Top Sleva</h3><p>Až -30 %</p></a>
+          <a class="category-card category-card-lux" href="/eshop/product/list"><div class="category-icon">⚡</div><h3>Rychlé akce</h3><p>Platí do vyprodání</p></a>
+          <a class="category-card category-card-lux" href="/eshop/product/list"><div class="category-icon">💎</div><h3>Lux výběr</h3><p>Prémiové kousky</p></a>
+        {/block}
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 3D Categories -->
+<section class="categories-3d">
+  <h2 class="section-title">PROZKOUMEJ DIMENZE</h2>
+  <div class="categories-grid">
+    <div class="category-3d">
+      <div class="category-inner">
+        <div class="category-front">
+          <div class="category-icon">👗</div>
+          <h3 class="category-title">MÓDA</h3>
+          <p class="category-desc">Evoluce stylu nové generace</p>
+        </div>
+        <div class="category-back">
+          <div class="category-icon">✨</div>
+          <h3 class="category-title">MÓDA</h3>
+          <p class="category-desc">Kvantové tkaniny, holografické potisky, samo-adaptivní střihy</p>
+          <a class="category-cta" href="/eshop/product/list">Vstoupit do Fashion Verse</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="category-3d">
+      <div class="category-inner">
+        <div class="category-front">
+          <div class="category-icon">🔬</div>
+          <h3 class="category-title">ELEKTRONIKA</h3>
+          <p class="category-desc">Revoluční technologický ekosystém</p>
+        </div>
+        <div class="category-back">
+          <div class="category-icon">🚀</div>
+          <h3 class="category-title">ELEKTRONIKA</h3>
+          <p class="category-desc">Zařízení s AI, neurální rozhraní, kvantové výpočty</p>
+          <a class="category-cta" href="/eshop/product/list">Vstoupit do Tech Verse</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+{/block}

@@ -1,0 +1,93 @@
+{block content}
+<div class="products-header listing-header">
+    <h1 class="page-title">Produkty</h1>
+    <form method="get" class="search-form" action="{link Product:list}" role="search" aria-label="Vyhledávání produktů">
+        <div class="search-input-wrapper">
+            <span class="search-icon">🔍</span>
+            <input type="search" name="q" placeholder="Hledat produkty..." value="{$q|escape}" class="search-input">
+            <button type="submit" class="search-btn btn">Hledat</button>
+        </div>
+    </form>
+    </div>
+
+<div class="product-grid" data-view="grid">
+{foreach $products as $product}
+  <div class="product-card"
+       data-title="{$product['name']|escape}"
+       data-price="{$product['price']} Kč"
+       data-desc="{$product['description'] ?? 'Kvalitní produkt pro vaše potřeby'}"
+       data-img="{$product['image'] ?? '/assets/placeholder.svg'}"
+       data-id="{$product['id']}"
+       data-add-url="{link Product:add, $product['id']}"
+       itemscope itemtype="https://schema.org/Product">
+
+    <div class="card-media">
+      <a class="product-link" href="{link Product:detail, $product['id']}" itemprop="url">
+        <img src="{$product['image'] ?? '/assets/placeholder.svg'}"
+             alt="{$product['name']|escape}"
+             loading="lazy"
+             class="product-image"
+             itemprop="image">
+        <div class="image-overlay" aria-hidden="true">
+          <span class="view-detail">Zobrazit detail</span>
+        </div>
+      </a>
+
+      {ifset $product['badge']}
+        {var $bv = strtolower($product['badge'])}
+        {var $variant = (strpos($bv, 'sleva') !== false || strpos($bv, 'akce') !== false) ? 'sale' : (strpos($bv, 'novinka') !== false ? 'new' : (strpos($bv, 'hit') !== false ? 'top' : null))}
+        <div class="product-badge" {if $variant}data-variant="{$variant}"{/if} aria-label="Štítek produktu">{$product['badge']}</div>
+      {/ifset}
+
+      <button class="quickview-btn" data-quickview="{$product['id']}" aria-label="Rychlý náhled {$product['name']|escape}">
+        <span class="quickview-icon" aria-hidden="true">👁️</span>
+      </button>
+
+      <button class="wishlist-btn" aria-label="Přidat do oblíbených">
+        <span class="wishlist-icon" aria-hidden="true">❤️</span>
+      </button>
+    </div>
+
+    <div class="product-info">
+      <div class="product-category">
+        <span class="category-tag" itemprop="category">{$product['category'] ?? 'Obecné'}</span>
+      </div>
+
+      <h3 class="product-title" itemprop="name">
+        <a href="{link Product:detail, $product['id']}" itemprop="url">{$product['name']|escape}</a>
+      </h3>
+
+      <div class="product-description" itemprop="description">
+        {$product['description'] ?? 'Kvalitní produkt pro vaše potřeby'}
+      </div>
+
+      <div class="product-price price" itemprop="offers" itemscope itemtype="https://schema.org/Offer">
+        <meta itemprop="priceCurrency" content="CZK">
+        <span class="price-amount" itemprop="price">{$product['price']}</span>
+        <span class="price-currency">Kč</span>
+      </div>
+
+      <div class="product-actions">
+        <button class="btn btn-primary add-to-cart-btn ajax-add"
+                data-add-url="{link Product:add, $product['id']}"
+                aria-label="Přidat {$product['name']|escape} do košíku">
+          <span class="btn-icon" aria-hidden="true">🛒</span>
+          <span class="btn-text">Přidat do košíku</span>
+        </button>
+      </div>
+    </div>
+  </div>
+{/foreach}
+</div>
+
+{if $pages > 1}
+<nav class="pagination pagination-section" role="navigation" aria-label="Stránkování">
+    {for $p = 1; $p <= $pages; $p++}
+        <a class="pagination-number page{if $p == $page} active{/if}" href="{link Product:list, page => $p, q => $q}">{$p}</a>
+    {/for}
+</nav>
+{/if}
+
+{/block}
+
+

@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+
+	<title>{ifset title}{include title|stripHtml} | {/ifset}Nette Web</title>
+
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+
+	<link rel="stylesheet" href="{$basePath}/assets/main.css?v={=time()}">
+	<script src="{$basePath}/assets/main.js" defer></script>
+</head>
+
+<body class="luxe-verse">
+	<!-- Animated Background -->
+	<div class="bg-animation"></div>
+	<!-- Floating Particles -->
+	<div class="particle"></div>
+	<div class="particle"></div>
+	<div class="particle"></div>
+	<header class="site-header">
+		<div class="container">
+			<div class="header-inner">
+				<a class="brand" href="/">
+					<span class="brand-icon">🛍️</span>
+					<span class="brand-text">MyApp</span>
+				</a>
+				
+				<!-- Header Search -->
+				<div class="header-search">
+					<form method="get" action="/eshop/product/list" class="search-form">
+						<div class="search-input-wrapper">
+							<span class="search-icon">🔍</span>
+							<input type="search" name="q" placeholder="Hledat produkty..." class="search-input">
+							<button type="submit" class="search-btn" aria-label="Hledat">Go</button>
+						</div>
+					</form>
+				</div>
+				
+				<button class="nav-toggle" aria-label="Menu">
+					<span></span>
+					<span></span>
+					<span></span>
+				</button>
+				
+				<nav class="main-nav">
+					<a href="/" class="nav-link">Domů</a>
+					<a href="/eshop/product/list" class="nav-link">E-shop</a>
+					<a href="#" class="nav-link">O nás</a>
+					<a href="#" class="nav-link">Kontakt</a>
+				</nav>
+				
+				<div class="header-actions">
+					<button class="theme-toggle" aria-label="Přepnout motiv" data-theme-toggle>
+						<span class="theme-icon light-icon">☀️</span>
+						<span class="theme-icon dark-icon">🌙</span>
+					</button>
+					
+					<a href="#" class="account-link" aria-label="Můj účet">
+						<span class="account-icon">👤</span>
+					</a>
+					
+					<div class="cart">
+						<a href="#" class="cart-toggle">
+							<span class="cart-icon">🛒</span>
+							<span class="cart-text">Košík</span>
+							{var $cart = $presenter->getSession()->getSection('cart')->products ?? []}
+							<span class="cart-count" n:if="$cart">
+								{var $cartCount = array_sum($cart)}{$cartCount}
+							</span>
+						</a>
+					</div>
+				</div>
+			</div>
+		</div>
+	</header>
+
+	<!-- Cart drawer moved outside header to avoid clipping and stacking context issues -->
+	<div class="cart-overlay" aria-hidden="true"></div>
+	<aside class="cart-drawer" aria-hidden="true">
+		<div class="cart-drawer-header">
+			<h3>🛒 Váš košík</h3>
+			<button class="cart-drawer-close" aria-label="Zavřít">×</button>
+		</div>
+		<div class="cart-drawer-content">
+			<div class="cart-items"></div>
+			<div class="cart-drawer-summary">
+				<div class="cart-total"></div>
+				<a class="btn btn-primary" href="/eshop/checkout/">Pokračovat k platbě</a>
+			</div>
+		</div>
+	</aside>
+
+	<main class="container">
+		<div n:foreach="$flashes as $flash" n:class="flash, $flash->type">{$flash->message}</div>
+		{include content}
+	</main>
+
+	<footer class="site-footer">
+		<div class="container">
+			<div class="footer-inner">
+				<div class="footer-col">
+					<h4>🚀 O nás</h4>
+					<p>MyApp — moderní e‑shop vytvořený v Nette framework. Ukázkový obsah a layout pro demonstraci možností.</p>
+					<div class="social-links">
+						<a href="#" aria-label="Facebook">📘</a>
+						<a href="#" aria-label="Instagram">📷</a>
+						<a href="#" aria-label="Twitter">🐦</a>
+					</div>
+				</div>
+				<div class="footer-col">
+					<h4>🔗 Užitečné odkazy</h4>
+					<ul>
+						<li><a href="/">🏠 Domů</a></li>
+						<li><a href="/eshop/product/list">🛍️ E-shop</a></li>
+						<li><a href="#">📋 Podmínky</a></li>
+						<li><a href="#">🔒 Ochrana osobních údajů</a></li>
+					</ul>
+				</div>
+				<div class="footer-col">
+					<h4>📞 Kontakt</h4>
+					<p>
+						📧 info@myapp.local<br>
+						📱 +420 123 456 789<br>
+						📍 Praha, Česká republika
+					</p>
+				</div>
+				<div class="footer-col">
+					<h4>📧 Newsletter</h4>
+					<p>Přihlaste se k odběru novinek a získejte 10% slevu na první nákup!</p>
+					<form class="newsletter-form">
+						<input type="email" placeholder="Váš email" required>
+						<button type="submit" class="btn btn-primary">Přihlásit</button>
+					</form>
+				</div>
+			</div>
+			<div class="footer-bottom">
+				<p>&copy; 2025 MyApp. Všechna práva vyhrazena.</p>
+			</div>
+		</div>
+	</footer>
+
+</body>
+</html>
